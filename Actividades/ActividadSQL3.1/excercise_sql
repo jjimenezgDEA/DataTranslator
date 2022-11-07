@@ -1,0 +1,63 @@
+-- this is a comment
+
+SELECT first_name, last_name
+FROM actor;
+
+SELECT
+UPPER(first_name)||' '||UPPER(last_name) AS 'Actor Name'
+FROM actor;
+
+SELECT actor_id,first_name,last_name
+FROM actor
+WHERE first_name LIKE 'JOE';
+
+SELECT actor_id,first_name,last_name
+FROM actor
+WHERE last_name LIKE '%GEN%';
+
+SELECT actor_id,first_name,last_name
+FROM actor
+WHERE last_name LIKE '%LI%'
+ORDER BY last_name ASC, first_name ASC;
+
+SELECT country_id,country
+FROM country
+WHERE country IN ('Afghanistan','Bangladesh','China');
+
+SELECT title,language_id
+FROM film
+WHERE title LIKE "Q%" AND language_id=1
+
+--SELECT title
+--FROM film
+--WHERE title LIKE "Q%" AND (SELECT language_id
+--                           FROM language
+--                           where name LIKE "English")
+
+SELECT *
+FROM language l
+JOIN (SELECT f.title,f.language_id
+        FROM film f
+        WHERE f.title LIKE "Q%"
+        ) Q 
+    ON l.language_id = Q.language_id
+WHERE l.name="English";
+
+SELECT fi.title,ac.first_name,ac.last_name
+FROM actor ac
+INNER JOIN film_actor fa ON ac.actor_id=fa.actor_id
+INNER JOIN film fi ON fi.film_id=fa.film_id
+WHERE fi.title in (SELECT fi.title FROM film WHERE fi.title="ALONE TRIP");
+
+SELECT co.country,cu.first_name,cu.last_name,cu.email
+FROM customer cu
+INNER JOIN address ad ON cu.address_id=ad.address_id
+INNER JOIN city ci ON ci.city_id=ad.city_id
+INNER JOIN country co ON co.country_id=ci.country_id
+WHERE co.country="Canada";
+
+SELECT ca.name AS "Category",fi.title AS "FilmTitle"
+FROM film fi
+INNER JOIN film_category fc ON fc.film_id=fi.film_id
+INNER JOIN category ca ON ca.category_id=fc.category_id
+WHERE ca.name="Family";
